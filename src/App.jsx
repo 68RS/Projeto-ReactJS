@@ -23,7 +23,7 @@ const posts = [
           {type: 'link', content: '👉 jane.design/doctorcare'},            
                             
     ],
-    publisheadAT: new Date('2023-09-05 16:40:00'),
+    publishedAt: new Date('2023-09-05 16:40:00'),
   },
 
   {
@@ -40,7 +40,7 @@ const posts = [
           {type: 'link', content: '👉 jane.design/doctorcare'},            
                             
     ],
-    publisheadAT: new Date('2023-09-05 16:53:00'),
+    publishedAt: new Date('2023-09-05 16:53:00'),
   },
 ];
 
@@ -63,7 +63,7 @@ export function App() {
                 key={post.id} 
                 author={post.author}
                 content={post.content}
-                publisheadAT={post.publisheadAT}             
+                publishedAt={post.publishedAt}             
                 />
               )
              })}    
