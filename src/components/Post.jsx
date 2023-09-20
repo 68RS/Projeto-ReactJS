@@ -5,9 +5,17 @@ import { Avatar } from './Avatar';
 import { Comment } from './Comment';
 
 import styles from './Post.module.css';
+import { useState } from 'react';
 
+// Estado (state) = variáveis que eu quero que o componente monitore.
 
 export const Post = ({ author, publishedAt, content }) => {
+  const [comments, setComments] = useState([
+    'Post muito bacana, hein?!'    
+  ])
+
+  const [newCommentText, setNewCommentText] = useState('')
+
   const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
     locale: ptBR,
   })
@@ -16,6 +24,30 @@ export const Post = ({ author, publishedAt, content }) => {
     locale: ptBR,
     addSuffix:true
   })
+
+  function handleCreateNewComment() {
+    event.preventDefault()        	 
+
+    setComments([...comments, newCommentText]); 
+    setNewCommentText('');
+  
+  }
+
+  const handleNewCommentChange = () => {
+    setNewCommentText(event.target.value);
+  }
+
+  const deleteComment = (commentToDelete) => {
+    // Imutabilidade = as variáves não sofrem mutação,
+    //nós criamos um novo valor (um novo espaço na memória) 
+    const commentsWhithoutDeletedOne = comments.filter(comment => {
+        return comment !== commentToDelete;  
+    })
+
+    setComments(commentsWhithoutDeletedOne);
+  }
+
+
 
   return (
     <article className={styles.post}>
@@ -37,18 +69,21 @@ export const Post = ({ author, publishedAt, content }) => {
         <div className={styles.content}>
            {content.map(line => {
               if(line.type === 'paragraph') {
-                return <p>{line.content}</p>;
+                return <p key={line.content}>{line.content}</p>;
               } else if (line.type === 'link') {
-                return <p><a href="#">{line.content}</a></p>;
+                return <p key={line.content}><a href="#">{line.content}</a></p>;
               }
            })}
         </div>
 
-        <form className={styles.comentForm}>
+        <form onSubmit={handleCreateNewComment} className={styles.comentForm}>
           <strong>Deixe seu feedback</strong>
 
-          <textarea 
-            placeholder='Deixe um comentário'            
+          <textarea          
+            name = 'comment'
+            placeholder='Deixe um comentário' 
+            value={newCommentText}
+            onChange={handleNewCommentChange}           
           />
 
         <footer>
@@ -58,9 +93,15 @@ export const Post = ({ author, publishedAt, content }) => {
         </form>
 
         <div className={styles.commentList}>
-          <Comment />
-          <Comment />
-          <Comment />
+          {comments.map(comment => {
+            return (
+              <Comment 
+                key={comment} 
+                content = {comment} 
+                onDeleteComment={deleteComment} 
+              />
+            )
+          })}
         </div>
         
     </article>
